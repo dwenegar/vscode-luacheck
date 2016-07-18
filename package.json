@@ -1,0 +1,91 @@
+{
+  "name": "vscode-luacheck",
+  "displayName": "vscode-luacheck",
+  "description": "Lua linting using luacheck",
+  "version": "0.0.1",
+  "publisher": "dwenegar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/dwenegar/vscode-luacheck"
+  },
+  "homepage": "https://bitbucket.org/dwenegar/vscode-luacheck",
+  "bugs": {
+    "url": "https://bitbucket.org/dwenegar/vscode-luacheck/issue"
+  },
+  "icon": "icon.svg",
+  "engines": {
+    "vscode": "^1.0.0"
+  },
+  "categories": [
+    "Languages",
+    "Linters",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:lua",
+    "onCommand:luacheck.showExecConf"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "luacheck.showExecConf",
+        "title": "Show Executable and Compile Options",
+        "category": "Luacheck"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Luacheck configuration",
+      "properties": {
+        "luacheck.luacheck": {
+          "type": "string",
+          "default": "luacheck",
+          "description": "Path to the Luacheck executable"
+        },
+        "luacheck.globals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of custom globals."
+        },
+        "luacheck.ignore": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of variables to ignore."
+        },
+        "luacheck.diagnostic.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable diagnostic"
+        },
+        "luacheck.diagnostic.delay": {
+          "type": "number",
+          "default": 500,
+          "description": "The delay after which diagnostic starts (in millisecond)"
+        },
+        "luacheck.diagnostic.maxBuffer": {
+          "type": "number",
+          "default": 262144,
+          "description": "Tolerable size of the luacheck output for diagnostic"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.5",
+    "vsce": "^1.0.0",
+    "vscode": "^0.11.0"
+  }
+}
