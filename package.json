@@ -2,7 +2,7 @@
   "name": "vscode-luacheck",
   "displayName": "vscode-luacheck",
   "description": "Lua linting using luacheck",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "dwenegar",
   "license": "MIT",
   "repository": {
@@ -11,7 +11,7 @@
   },
   "homepage": "https://bitbucket.org/dwenegar/vscode-luacheck",
   "bugs": {
-    "url": "https://bitbucket.org/dwenegar/vscode-luacheck/issue"
+    "url": "https://bitbucket.org/dwenegar/vscode-luacheck/issues"
   },
   "icon": "icon.svg",
   "engines": {
