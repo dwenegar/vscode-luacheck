@@ -78,7 +78,7 @@ export class LuacheckDiagnosticProvider implements DiagnosticProvider {
             let echar: number = parseInt(matched[3]);
             let msg: string = matched[5];
             let type: vscode.DiagnosticSeverity = str2diagserv(matched[4]);
-            let range = new vscode.Range(sline - 1, schar - 1, sline - 1, echar - 1);
+            let range = new vscode.Range(sline - 1, schar - 1, sline - 1, echar);
             result.push(new vscode.Diagnostic(range, msg, type));
         });
         return result;

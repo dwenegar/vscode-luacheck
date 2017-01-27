@@ -10,9 +10,10 @@ export function getConf<T>(name: string): T {
     return value;
 }
 
-function appendCheck(parameters: string[], opt: string, args: string) {
+function appendCheck(parameters: string[], opt: string, args: string[]) {
     if (args.length > 0) {
-        parameters.push(opt, args);
+        parameters.push(opt)
+        parameters.push(...args)
     }
 }
 
@@ -22,9 +23,9 @@ export function command(language: string, ...options: string[]): [string, string
         cmd += '.bat'
     }
     let args: string[] = [];
-    appendCheck(args, '--globals', getConf<string>('globals'));
-    appendCheck(args, '--ignore', getConf<string>('ignore'));
     args.push(...options);
+    appendCheck(args, '--globals', getConf<string[]>('globals'));
+    appendCheck(args, '--ignore', getConf<string[]>('ignore'));
     return [cmd, args];
 }
 
