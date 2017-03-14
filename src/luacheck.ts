@@ -35,7 +35,8 @@ export function check(document: vscode.TextDocument): [string, string[]] {
         '--codes',
         '--ranges',
         '--formatter', 'plain',
-        document.uri.fsPath);
+        '--filename', document.uri.fsPath,
+        '-')
 }
 
 export function version(lstring): [string, string[]] {

@@ -69,7 +69,7 @@ export class LuacheckDiagnosticProvider implements DiagnosticProvider {
         return execution.processString(cmd, args, {
             cwd: path.dirname(document.uri.fsPath),
             maxBuffer: luacheck.getConf<number>('diagnostic.maxBuffer')
-        }).then((result) => result.stdout);
+        }, document.getText()).then((result) => result.stdout);
     }
 
     parseDiagnostic(document: vscode.TextDocument, data: string): vscode.Diagnostic[] {

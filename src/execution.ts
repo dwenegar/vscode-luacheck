@@ -23,7 +23,7 @@ export interface FailedExecution {
     result?: Result;
 }
 
-export function processString(cmd: string, args: string[], opt: Option): Thenable<Result> {
+export function processString(cmd: string, args: string[], opt: Option, input: string): Thenable<Result> {
     return new Promise((resolve, reject) => {
         let proc = child_process.execFile(cmd, args, opt,
             (error, stdout, stderr) => {
@@ -35,7 +35,7 @@ export function processString(cmd: string, args: string[], opt: Option): Thenabl
                 } else {
                     resolve(<Result>{ error, stdout, stderr });
                 }
-            }
-        );
+            });
+        proc.stdin.end(input);
     });
 }
