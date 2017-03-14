@@ -17,7 +17,7 @@ function appendCheck(parameters: string[], opt: string, args: string[]) {
     }
 }
 
-export function command(language: string, ...options: string[]): [string, string[]] {
+export function command(...options: string[]): [string, string[]] {
     let cmd = getConf<string>('luacheck');
     if (process.platform == 'win32' && path.extname(cmd) != '.bat') {
         cmd += '.bat'
@@ -29,10 +29,15 @@ export function command(language: string, ...options: string[]): [string, string
     return [cmd, args];
 }
 
-export function check(language: string): [string, string[]] {
-    return command(language, '--no-color', '--codes', '--ranges', '--formatter', 'plain', '-');
+export function check(document: vscode.TextDocument): [string, string[]] {
+    return command(
+        '--no-color',
+        '--codes',
+        '--ranges',
+        '--formatter', 'plain',
+        document.uri.fsPath);
 }
 
-export function version(language: string): [string, string[]] {
-    return command(language, "--version");
+export function version(lstring): [string, string[]] {
+    return command("--version");
 }

@@ -5,13 +5,17 @@ import * as path from 'path';
 import * as luacheck from './luacheck';
 import * as execution from './execution';
 
-// filename:line:range: (code) message
-export const diagnosticRe = /^stdin:(\d+):(\d+)-(\d+): \(([EW])\d+\) (.+)$/
+// :line:range: (code) message
+export const diagnosticRe = /^:(\d+):(\d+)-(\d+): \(([EW])\d+\) (.+)$/
 function str2diagserv(str: string): vscode.DiagnosticSeverity {
-    if (str == 'E') {
-        return vscode.DiagnosticSeverity.Error;
+    switch (str) {
+        case 'E':
+            return vscode.DiagnosticSeverity.Error;
+        case 'W':
+            return vscode.DiagnosticSeverity.Warning;
+        default:
+            return vscode.DiagnosticSeverity.Information;
     }
-    return vscode.DiagnosticSeverity.Warning;
 }
 
 export interface DiagnosticProvider {
@@ -48,7 +52,7 @@ export function registerDiagnosticProvider(selector: vscode.DocumentSelector, pr
 
 export class LuacheckDiagnosticProvider implements DiagnosticProvider {
     provideDiagnostic(document: vscode.TextDocument): Thenable<vscode.Diagnostic[]> {
-        return this.fetchDiagnostic(document).then((data) => { return this.parseDiagnostic(data); },
+        return this.fetchDiagnostic(document).then((data) => { return this.parseDiagnostic(document, data); },
             (e: execution.FailedExecution) => {
                 if (e.errorCode === execution.ErrorCode.BufferLimitExceed) {
                     vscode.window.showWarningMessage(
@@ -61,16 +65,18 @@ export class LuacheckDiagnosticProvider implements DiagnosticProvider {
     }
 
     fetchDiagnostic(document: vscode.TextDocument): Thenable<string> {
-        let [cmd, args] = luacheck.check(document.languageId);
+        let [cmd, args] = luacheck.check(document);
         return execution.processString(cmd, args, {
             cwd: path.dirname(document.uri.fsPath),
             maxBuffer: luacheck.getConf<number>('diagnostic.maxBuffer')
-        }, document.getText()).then((result) => result.stdout.toString());
+        }).then((result) => result.stdout);
     }
 
-    parseDiagnostic(data: string): vscode.Diagnostic[] {
+    parseDiagnostic(document: vscode.TextDocument, data: string): vscode.Diagnostic[] {
+        const prefixLen = document.uri.fsPath.length;
         let result: vscode.Diagnostic[] = []
         data.split(/\r\n|\r|\n/).forEach((line) => {
+            line = line.substring(prefixLen);
             let matched = line.match(diagnosticRe);
             if (!matched) return;
             let sline: number = parseInt(matched[1]);

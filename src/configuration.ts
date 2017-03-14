@@ -37,7 +37,7 @@ export class ConfigurationViewer implements vscode.Disposable {
         this.chan = vscode.window.createOutputChannel('Luacheck Configuration');
     }
     show(document: vscode.TextDocument) {
-        let [command, args] = luacheck.command(document.languageId)
+        let [command, args] = luacheck.command()
         this.chan.show();
         this.chan.clear();
         let buf = []
