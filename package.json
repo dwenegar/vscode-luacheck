@@ -2,7 +2,7 @@
   "name": "vscode-luacheck",
   "displayName": "vscode-luacheck",
   "description": "Lua linting using luacheck",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "dwenegar",
   "license": "MIT",
   "repository": {
