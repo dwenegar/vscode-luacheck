@@ -39,6 +39,6 @@ export function check(document: vscode.TextDocument): [string, string[]] {
         '-')
 }
 
-export function version(lstring): [string, string[]] {
+export function version(): [string, string[]] {
     return command("--version");
 }

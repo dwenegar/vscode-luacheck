@@ -6,7 +6,7 @@ import * as luacheck from './luacheck';
 import * as execution from './execution';
 
 // :line:range: (code) message
-export const diagnosticRe = /^:(\d+):(\d+)-(\d+): \(([EW])\d+\) (.+)$/
+const diagnosticRe = /^:(\d+):(\d+)-(\d+): \(([EW])\d+\) (.+)$/
 function str2diagserv(str: string): vscode.DiagnosticSeverity {
     switch (str) {
         case 'E':
@@ -18,46 +18,14 @@ function str2diagserv(str: string): vscode.DiagnosticSeverity {
     }
 }
 
-export interface DiagnosticProvider {
-    provideDiagnostic(document: vscode.TextDocument): Thenable<vscode.Diagnostic[]>
-}
-
-export function registerDiagnosticProvider(selector: vscode.DocumentSelector, provider: DiagnosticProvider, name: string): vscode.Disposable {
-    let collection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticCollection(name);
-    let cancellers = new Map<string, vscode.CancellationTokenSource>();
-    let subsctiptions: vscode.Disposable[] = [];
-    let lint = (document) => {
-        if (!vscode.languages.match(selector, document)) return;
-        const uri = document.uri;
-        const uriStr = uri.toString();
-        if (cancellers.has(uriStr)) {
-            cancellers.get(uriStr).dispose();
-        }
-        cancellers.set(uriStr, new vscode.CancellationTokenSource);
-        provider.provideDiagnostic(document).then((diagnostics) => collection.set(uri, diagnostics));
-    };
-    vscode.workspace.onDidChangeTextDocument((change) => lint(change.document), null, subsctiptions);
-    vscode.workspace.onDidSaveTextDocument(document => lint(document), null, subsctiptions);
-    vscode.workspace.onDidOpenTextDocument(document => lint(document), null, subsctiptions);
-    return {
-        dispose() {
-            collection.dispose();
-            for (let canceller of Array.from(cancellers.values())) {
-                canceller.dispose();
-            }
-            vscode.Disposable.from(...subsctiptions).dispose();
-        }
-    };
-}
-
-export class LuacheckDiagnosticProvider implements DiagnosticProvider {
+export class DiagnosticProvider {
     provideDiagnostic(document: vscode.TextDocument): Thenable<vscode.Diagnostic[]> {
         return this.fetchDiagnostic(document).then((data) => { return this.parseDiagnostic(document, data); },
             (e: execution.FailedExecution) => {
                 if (e.errorCode === execution.ErrorCode.BufferLimitExceed) {
                     vscode.window.showWarningMessage(
-                        'Diagnostic was interpreted due to rack of buffer size. ' +
-                        'The buffer size can be increased using `luacheck.diagnostic.maxBuffer`. '
+                        'Diagnostic was interpreted due to lack of buffer size. ' +
+                        'The buffer size can be increased using `luacheck.maxBuffer`. '
                     );
                 }
                 return '';
@@ -68,7 +36,7 @@ export class LuacheckDiagnosticProvider implements DiagnosticProvider {
         let [cmd, args] = luacheck.check(document);
         return execution.processString(cmd, args, {
             cwd: path.dirname(document.uri.fsPath),
-            maxBuffer: luacheck.getConf<number>('diagnostic.maxBuffer')
+            maxBuffer: luacheck.getConf<number>('maxBuffer')
         }, document.getText()).then((result) => result.stdout);
     }
 

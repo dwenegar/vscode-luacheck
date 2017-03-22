@@ -2,7 +2,7 @@
   "name": "vscode-luacheck",
   "displayName": "vscode-luacheck",
   "description": "Lua linting using luacheck",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "publisher": "dwenegar",
   "license": "MIT",
   "repository": {
@@ -23,18 +23,10 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:lua",
-    "onCommand:luacheck.showExecConf"
+    "onLanguage:lua"
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
-        "command": "luacheck.showExecConf",
-        "title": "Show Executable and Compile Options",
-        "category": "Luacheck"
-      }
-    ],
     "configuration": {
       "type": "object",
       "title": "Luacheck configuration",
@@ -60,17 +52,7 @@
           "default": [],
           "description": "List of warnings to ignore."
         },
-        "luacheck.diagnostic.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable diagnostic"
-        },
-        "luacheck.diagnostic.delay": {
-          "type": "number",
-          "default": 500,
-          "description": "The delay after which diagnostic starts (in millisecond)"
-        },
-        "luacheck.diagnostic.maxBuffer": {
+        "luacheck.maxBuffer": {
           "type": "number",
           "default": 262144,
           "description": "Tolerable size of the luacheck output for diagnostic"
