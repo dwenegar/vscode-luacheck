@@ -13,7 +13,6 @@ let collection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticC
 function registerDiagnosticProvider(selector: vscode.DocumentSelector, provider: DiagnosticProvider, subscriptions: vscode.Disposable[]) {
     let lint = (document) => {
         if (vscode.languages.match(selector, document)) {
-            collection.clear();
             const uri = document.uri;
             const uriStr = uri.toString();
             provider.provideDiagnostic(document).then((diagnostics) => collection.set(uri, diagnostics));
