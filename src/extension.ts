@@ -11,15 +11,21 @@ const LUA_MODE: vscode.DocumentSelector = [
 let collection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticCollection('lua');
 
 function registerDiagnosticProvider(selector: vscode.DocumentSelector, provider: DiagnosticProvider, subscriptions: vscode.Disposable[]) {
+    let clearDiagnostics = (document) => {
+        if (vscode.languages.match(selector, document)) {
+            const uri = document.uri;
+            collection.set(uri, null);
+        }
+    };
     let lint = (document) => {
         if (vscode.languages.match(selector, document)) {
             const uri = document.uri;
-            const uriStr = uri.toString();
             provider.provideDiagnostic(document).then((diagnostics) => collection.set(uri, diagnostics));
         }
     };
     vscode.workspace.onDidChangeTextDocument(change => lint(change.document), null, subscriptions);
     vscode.workspace.onDidOpenTextDocument(document => lint(document), null, subscriptions);
+    vscode.workspace.onDidCloseTextDocument(document => clearDiagnostics(document), null, subscriptions);
     vscode.window.onDidChangeActiveTextEditor(editor => {
         if (editor) lint(editor.document)
     }, null, subscriptions);
