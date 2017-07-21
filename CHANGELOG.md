@@ -1,3 +1,7 @@
+## 0.1.2 - 22 July 2017
+
+* Clear diagnostics when closing a file.
+
 ## 0.1.1 - 23 March 2017
 
 * Fixed clearing the diagnostic messages when switching document.
