@@ -2,7 +2,7 @@
   "name": "vscode-luacheck",
   "displayName": "vscode-luacheck",
   "description": "Lua linting using luacheck",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "dwenegar",
   "license": "MIT",
   "repository": {
@@ -18,7 +18,7 @@
     "vscode": "^1.0.0"
   },
   "categories": [
-    "Languages",
+    "Programming Languages",
     "Linters",
     "Other"
   ],
@@ -34,7 +34,7 @@
         "luacheck.luacheck": {
           "type": "string",
           "default": "luacheck",
-          "description": "Path to the Luacheck executable"
+          "description": "Path to the luacheck executable"
         },
         "luacheck.globals": {
           "type": "array",
