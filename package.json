@@ -7,11 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/dwenegar/vscode-luacheck"
+    "url": "https://github.com/dwenegar/vscode-luacheck"
   },
-  "homepage": "https://bitbucket.org/dwenegar/vscode-luacheck",
+  "homepage": "https://github.com/dwenegar/vscode-luacheck",
   "bugs": {
-    "url": "https://bitbucket.org/dwenegar/vscode-luacheck/issues"
+    "url": "https://github.com/dwenegar/vscode-luacheck/issues"
   },
   "icon": "icon.png",
   "engines": {
