@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as luacheck from './luacheck'
 import * as configuration from "./configuration"
 
 import { DiagnosticProvider } from './diagnostic'
