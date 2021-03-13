@@ -1,7 +1,5 @@
 import * as child_process from 'child_process';
 
-import * as vscode from 'vscode';
-
 export interface Option {
     cwd: string,
     maxBuffer: number
