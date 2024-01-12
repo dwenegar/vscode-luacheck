@@ -1,31 +1,27 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
 
-export function getConf<T>(name: string): T {
+export function getConf<T>(name: string, defaultValue: T): T {
     let conf = vscode.workspace.getConfiguration('luacheck');
     let value = conf.get<T>(name);
-    if (value == null) {
-        vscode.window.showErrorMessage(`Error: invalid configuration ${name}`);
+    if (value) {
+        return value;
     }
-    return value;
+    return defaultValue;
 }
 
-function appendCheck(parameters: string[], opt: string, args: string[]) {
-    if (args.length > 0) {
-        parameters.push(opt)
-        parameters.push(...args)
+function appendCheck(parameters: string[], opt: string, args: string[] | undefined) {
+    if (args && args.length > 0) {
+        parameters.push(opt);
+        parameters.push(...args);
     }
 }
 
 export function command(...options: string[]): [string, string[]] {
-    let cmd = getConf<string>('luacheck');
-    if (process.platform == 'win32' && path.extname(cmd) != '.bat') {
-        cmd += '.bat'
-    }
+    let cmd = getConf<string>('luacheck', 'luacheck');
     let args: string[] = [];
     args.push(...options);
-    appendCheck(args, '--globals', getConf<string[]>('globals'));
-    appendCheck(args, '--ignore', getConf<string[]>('ignore'));
+    appendCheck(args, '--globals', getConf<string[]>('globals', []));
+    appendCheck(args, '--ignore', getConf<string[]>('ignore', []));
     return [cmd, args];
 }
 
@@ -36,9 +32,9 @@ export function check(document: vscode.TextDocument): [string, string[]] {
         '--ranges',
         '--formatter', 'plain',
         '--filename', document.uri.fsPath,
-        '-')
+        '-');
 }
 
 export function version(): [string, string[]] {
-    return command("--version");
+    return command('--version');
 }

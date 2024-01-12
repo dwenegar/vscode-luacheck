@@ -34,6 +34,6 @@ export function processString(cmd: string, args: string[], opt: Option, input: s
                     resolve(<Result>{ error, stdout, stderr });
                 }
             });
-        proc.stdin.end(input);
+        proc.stdin!.end(input);
     });
 }

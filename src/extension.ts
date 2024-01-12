@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import * as configuration from "./configuration"
+import * as configuration from './configuration';
 
-import { DiagnosticProvider } from './diagnostic'
+import { DiagnosticProvider } from './diagnostic';
 
 const LUA_MODE: vscode.DocumentSelector = [
     { language: 'lua', scheme: 'file' }
@@ -10,13 +10,13 @@ const LUA_MODE: vscode.DocumentSelector = [
 let collection: vscode.DiagnosticCollection = vscode.languages.createDiagnosticCollection('lua');
 
 function registerDiagnosticProvider(selector: vscode.DocumentSelector, provider: DiagnosticProvider, subscriptions: vscode.Disposable[]) {
-    let clearDiagnostics = (document) => {
+    let clearDiagnostics = (document: vscode.TextDocument) => {
         if (vscode.languages.match(selector, document)) {
             const uri = document.uri;
-            collection.set(uri, null);
+            collection.set(uri, []);
         }
     };
-    let lint = (document) => {
+    let lint = (document: vscode.TextDocument) => {
         if (vscode.languages.match(selector, document)) {
             const uri = document.uri;
             provider.provideDiagnostic(document).then((diagnostics) => collection.set(uri, diagnostics));
@@ -26,7 +26,9 @@ function registerDiagnosticProvider(selector: vscode.DocumentSelector, provider:
     vscode.workspace.onDidOpenTextDocument(document => lint(document), null, subscriptions);
     vscode.workspace.onDidCloseTextDocument(document => clearDiagnostics(document), null, subscriptions);
     vscode.window.onDidChangeActiveTextEditor(editor => {
-        if (editor) lint(editor.document)
+        if (editor) {
+            lint(editor.document);
+        }
     }, null, subscriptions);
     vscode.workspace.onDidChangeConfiguration(() => {
         if (vscode.window.activeTextEditor) {
