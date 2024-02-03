@@ -28,7 +28,7 @@ export class DiagnosticProvider {
                         'The buffer size can be increased using `luacheck.maxBuffer`. '
                     );
                 }
-                return [];
+                throw e;
             });
     }
 
@@ -37,7 +37,7 @@ export class DiagnosticProvider {
         return execution.processString(cmd, args, {
             cwd: path.dirname(document.uri.fsPath),
             maxBuffer: luacheck.getConf<number>('maxBuffer', 256 * 1024)
-        }, document.getText()).then((result) => result.stdout);
+        }, document.getText(), document.uri.fsPath).then((result) => result.stdout);
     }
 
     parseDiagnostic(document: vscode.TextDocument, data: string): vscode.Diagnostic[] {
