@@ -28,7 +28,7 @@ export class DiagnosticProvider {
                         'The buffer size can be increased using `luacheck.maxBuffer`. '
                     );
                 }
-                return [];
+                throw e;
             });
     }
 

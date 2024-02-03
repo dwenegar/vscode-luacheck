@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as configuration from './configuration';
+import * as execution from './execution';
 
 import { DiagnosticProvider } from './diagnostic';
 
@@ -19,7 +20,11 @@ function registerDiagnosticProvider(selector: vscode.DocumentSelector, provider:
     let lint = (document: vscode.TextDocument) => {
         if (vscode.languages.match(selector, document)) {
             const uri = document.uri;
-            provider.provideDiagnostic(document).then((diagnostics) => collection.set(uri, diagnostics));
+            provider.provideDiagnostic(document).then((diagnostics) => collection.set(uri, diagnostics),
+                (e: execution.FailedExecution) => {
+                    // retain existing diagnostics when cancelled or error
+                    return;
+                });
         }
     };
     vscode.workspace.onDidChangeTextDocument(change => lint(change.document), null, subscriptions);
